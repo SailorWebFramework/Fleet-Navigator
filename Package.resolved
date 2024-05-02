@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "javascriptkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftwasm/JavaScriptKit",
+      "state" : {
+        "revision" : "3b5af3d442179900455307c725fe6a111a714b27",
+        "version" : "0.19.2"
+      }
+    },
+    {
+      "identity" : "sailboat",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SailorWebFramework/Sailboat",
+      "state" : {
+        "revision" : "16d80180638af659d0226564600f672fabbeba7b",
+        "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "sailor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SailorWebFramework/Sailor",
+      "state" : {
+        "revision" : "434937525a3c616d659635efa5636d0821ed3807",
+        "version" : "0.2.0"
+      }
+    }
+  ],
+  "version" : 2
+}

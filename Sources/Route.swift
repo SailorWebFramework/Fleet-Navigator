@@ -1,32 +1,24 @@
 
+import Sailor
 import Sailboat
-import SailorShared
 
-public struct Route<MyRoute: Routes>: Operator {
+public struct Route: Fragment {
+    public var hash: String
+    
     public var children: [any Page]
-    
-    public var id: String
-    
+        
     public var isActive: Bool {
         !children.isEmpty
     }
     
-    public var body: some Page {
-        // TODO: new error
-        fatalError("route")
-//        InternalError.recursingInPageBody(name: "route")
-        return self
-    }
-    
-    let route: MyRoute
+    let route: any RouteValue
 
-    public init(_ route: MyRoute, @PageBuilder _ builder: @escaping () -> any Operator) {
-        self.id = ""
+    public init(_ route: any RouteValue, @PageBuilder _ builder: @escaping () -> any Fragment) {
+        self.hash = route.description
         self.route = route
         
         // TODO: move to @Environment
-        if route == RouterUtils<MyRoute>.currentRoute() {
-            print("ROUTE IS \(route), \(RouterUtils<MyRoute>.currentRoute())")
+        if route.description == RouterUtils.currentRoute().description {
             self.children = builder().children
         } else {
             self.children = []

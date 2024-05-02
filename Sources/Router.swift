@@ -1,35 +1,34 @@
 import Sailboat
+import Sailor
 
-public struct Router<MyRoutes: Routes>: Operator {
+public struct Router: Fragment {
+    public var hash: String
     public var children: [any Page]
-    
-    public var id: String
+                
+    public init(
+        @RouteBuilder _ routes: @escaping () -> [Route],
+        @PageBuilder notFound: @escaping () -> any Fragment
+    ) {
         
-//    var curr_route: String? = nil
-    
-    public var body: some Page {
-        fatalError("router doesnt have body")
-        return self
-    }
-    
-    // TODO: make this init work correctly
-    public init(@RouteBuilder<MyRoutes> _ routes: @escaping () -> [Route<MyRoutes>], notFound: @escaping () -> any Page) {
-        self.children = []//routes.children
-        self.id = ""
+        self.children = []
+        self.hash = ""
         
         let routes = routes()
+                
         for route in routes {
             if route.isActive {
-                self.children.append(route)
+                self.children.append(contentsOf: route.children)
+                self.hash += route.hash
             }
         }
         
         if self.children.isEmpty {
-            // TODO: would be nice to have a Route Operator for consistency
-//            self.children.append(Route<MyRoutes>(.NotFound) { notFound() })
-            self.children.append(notFound())
+            self.children = notFound().children
         }
+        
+        // register the url state for the Router
+        _ = Navigator.url
+        
     }
-    
     
 }

@@ -6,46 +6,70 @@
 //
 
 import Sailboat
+import JavaScriptKit
+import SailorWeb
 
-// TODO: dictionary use thing so   @Environment(\.myCustomSetting) var mySetting works?
-// TODO: somehow pass it down
-public protocol Routes: CustomStringConvertible, Equatable, Hashable {
-//    static var getRoot: Self { get }
-    var description: String  { get }
+public protocol RouteValue: CustomStringConvertible { }
 
-    // TODO: consider changing to v
-    static var defaultRoute: Self { get }
+extension String: RouteValue { }
+
+//public protocol Routes: RouteValue, Equatable, Hashable {
+////    static var getRoot: Self { get }
+//    var description: String  { get }
+//
+//    // TODO: consider changing to v
+//    static var defaultRoute: Self { get }
+//    
+//    static var bindings: BidirectionalDictionary<Self, String> { get }
+//        
+//    static func fromString(_ str: String) -> Self
+//    
+//}
+//
+//public extension Routes {
+//    var description: String {
+//        Self.bindings[key: self] ?? Self.bindings[key: Self.defaultRoute] ?? ""
+//    }
+//    
+//    static func fromString(_ str: String) -> Self {
+//        bindings[value: str] ?? .defaultRoute
+//    }
+//}
+
+public final class Navigator {
+    @Published public static var url: String = getUrl()
     
-    static var bindings: BidirectionalDictionary<Self, String> { get }
-        
-    static func fromString(_ str: String) -> Self
-    
-}
-
-public extension Routes {
-    var description: String {
-        Self.bindings[key: self] ?? Self.bindings[key: Self.defaultRoute] ?? ""
+    private static func getUrl() -> String {
+        let window = JSObject.global.window
+        return window.location.object!.href.string!
     }
     
-    static func fromString(_ str: String) -> Self {
-        bindings[value: str] ?? .defaultRoute
-    }
-}
+    private static func buildRoute(_ route: any RouteValue) -> String {
+        if route.description == "/" {
+            return "/"
+        }
 
-public final class Navigation<MyRoutes: Routes> {
-    public var route: MyRoutes
-    
-    let assignRoute: (MyRoutes) -> Void
-    
-    public init(route: MyRoutes, assignRoute: @escaping (MyRoutes) -> Void) {
-        self.route = route
-        self.assignRoute = assignRoute
+        return "/\(route.description)"
     }
     
 //    MyRoute
-    public func go(to route: MyRoutes) {
-        self.route = route
-        assignRoute(route)
-        SailboatGlobal.manager.update()
+    public static func go(to route: any RouteValue) {
+        let window = JSObject.global.window
+        let history = window.history.object!
+
+        // Define the new URL you want to navigate to
+        let newUrl = Self.buildRoute(route)
+
+        // Create an empty JavaScript object for the state
+        let stateObject = JSObject.global.Object.function!.new()
+
+        // Define the title (even though browsers currently ignore this parameter)
+        let title = JSValue.string("")
+
+        // Directly call `pushState` with the arguments
+        history.pushState?(stateObject, title, JSValue.string(newUrl))
+        
+        Self.url = getUrl()
+        
     }
 }

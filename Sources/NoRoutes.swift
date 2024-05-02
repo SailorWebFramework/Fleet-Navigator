@@ -8,15 +8,13 @@
 
 import Sailboat
 
-public enum NoRoutes: Routes {
-    public static var defaultRoute: Self { .root }
-    
-    public static var bindings: BidirectionalDictionary<NoRoutes, String> = [
-        .root: "/",
-        .notFound: "404"
-    
-    ]
-
-    case root, notFound
-    
-}
+//public enum NoRoutes: Routes {
+//    public static var defaultRoute: Self { .root }
+//    
+//    public static var bindings: BidirectionalDictionary<NoRoutes, String> = [
+//        .root: "/"
+//    ]
+//
+//    case root
+//    
+//}

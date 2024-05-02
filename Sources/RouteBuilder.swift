@@ -8,8 +8,8 @@
 import Sailboat
 
 @resultBuilder
-public struct RouteBuilder<MyRoutes: Routes> {
-    public static func buildBlock(_ children: Route<MyRoutes>...) -> [Route<MyRoutes>] {
+public struct RouteBuilder {
+    public static func buildBlock(_ children: Route...) -> [Route] {
         return children
 
     }
